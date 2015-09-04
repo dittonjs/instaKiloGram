@@ -1,0 +1,19 @@
+{
+  "name": "instaKiloGram",
+  "version": "1.0.0",
+  "description": "Bigger and better than your Instagram.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dittonjs/instaKiloGram.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dittonjs/instaKiloGram/issues"
+  },
+  "homepage": "https://github.com/dittonjs/instaKiloGram"
+}
