@@ -1,5 +1,11 @@
+body {
+  margin: 0;
+}
+
 .header {
-  position: relative;
+  position: fixed;
+  z-index: 9;
+  top: 0;
   padding: 20px;
   width: 100%;
   background-color: rgb(17,67,121);
@@ -22,12 +28,72 @@
   width: 80%;
   height: 100%;
   margin: auto;
+  transition: all .5s ease;
 }
 
-/*.content {
-  margin-top: 50px;
-}*/
-
-body {
-  margin: 0;
+.content {
+  margin-top: 100px;
 }
+
+.header-icon {
+  position: absolute;
+  left: 30px;
+  margin-left: 0px;
+  cursor: pointer;
+  transition: all .5s ease;
+}
+
+.open {
+  left: 320px;
+}
+
+.side-menu {
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: -310px;
+  bottom: 0;
+  width: 300px;
+  box-shadow: 5px 5px 5px rgba(90,90,90,1);
+  background-color: white;
+  transition: all .5s ease;
+}
+
+.side-menu-open {
+  left: 0px;
+}
+
+.side-menu-item {
+  padding: 24px 15px 24px 15px;
+  font-size: 150%;
+  border-bottom: 1px solid gray;
+  cursor: pointer;
+}
+.side-menu-item:hover {
+ background-color: lightgray;
+}
+
+.screen-overlay {
+  position: fixed;
+  z-index: -10;
+  top:0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(110,110,110,0.0);
+  transition: background-color .5s ease;
+}
+
+.screen-overlay-open {
+  z-index: 7;
+  background-color: rgba(110,110,110,0.8);
+}
+
+#menu-header {
+  background-color: lightgray;
+}
+
+.menu-icon {
+  margin-right: 10px;
+}
+

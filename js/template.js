@@ -1,0 +1,19 @@
+$( document ).ready(function(){
+  $(".side-menu-item.route").unbind("click").bind("click", transition)
+});
+
+function toggleNav(){
+  if($(".header-icon").attr("class").includes("open")){
+    $(".side-menu").removeClass("side-menu-open");
+    $(".header-icon").removeClass("open");
+    $(".screen-overlay").removeClass("screen-overlay-open");
+  } else {
+    $(".screen-overlay").addClass("screen-overlay-open");
+    $(".side-menu").addClass("side-menu-open");
+    $(".header-icon").addClass("open");
+  }
+}
+
+function transition(e){
+  window.location.href = e.currentTarget.innerText.toLowerCase().replace(" ", "_") + ".html";
+}

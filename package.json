@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/dittonjs/instaKiloGram/issues"
   },
-  "homepage": "https://github.com/dittonjs/instaKiloGram"
+  "homepage": "https://github.com/dittonjs/instaKiloGram",
+  "dependencies": {
+    "jquery": "^2.1.4"
+  }
 }
