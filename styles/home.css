@@ -1,0 +1,7 @@
+.text {
+  position: relative;
+  /*left: 100px;*/
+  text-align: center;
+  color: chartreuse;
+  font-size: 500%;
+}
