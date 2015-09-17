@@ -1,9 +1,10 @@
 $( document ).ready(function(){
-  $(".side-menu-item.route").unbind("click").bind("click", transition)
+  $(".side-menu-item.route").unbind("click").bind("click", transition);
+  $(".header-icon").unbind("click").bind("click", toggleNav);
 });
 
 function toggleNav(){
-  if($(".header-icon").attr("class").includes("open")){
+  if($(".header-icon").attr("class").indexOf("open") > -1){
     $(".side-menu").removeClass("side-menu-open");
     $(".header-icon").removeClass("open");
     $(".screen-overlay").removeClass("screen-overlay-open");
@@ -15,5 +16,5 @@ function toggleNav(){
 }
 
 function transition(e){
-  window.location.href = e.currentTarget.innerText.toLowerCase().replace(" ", "_") + ".html";
+  window.location.href = e.currentTarget.innerText.toLowerCase().replace(" ", "_") + ".html"; // this is a super hack, but we will do this better when we start doing node stuff
 }
