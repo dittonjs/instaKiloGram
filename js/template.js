@@ -1,6 +1,6 @@
 $( document ).ready(function(){
   $(".side-menu-item.route").unbind("click").bind("click", transition);
-  $(".header-icon").unbind("click").bind("click", toggleNav);
+  //$(".header-icon").bind("click", toggleNav);
 });
 
 function toggleNav(){
