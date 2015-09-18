@@ -1,6 +1,7 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
+  background-color: rgba(95,124,138,0.5);
 }
 
 .header {
@@ -9,7 +10,7 @@ body {
   top: 0;
   padding: 20px;
   width: 100%;
-  background-color: rgb(17,67,121);
+  background-color: #00796B;
   color: white;
   font-size: 200%;
   text-align: center;
@@ -28,8 +29,10 @@ body {
 .container {
   width: 80%;
   height: 100%;
+  position: relative;
   margin: auto;
   transition: all .5s ease;
+  min-width: 1000px;
 }
 
 .content {
@@ -98,5 +101,11 @@ body {
 
 .menu-icon {
   margin-right: 10px;
+}
+
+.button {
+  border-radius: 2px;
+  border: 1px solid gray;
+  padding: 5px 10px 5px 10px;
 }
 
