@@ -1,7 +1,19 @@
-.text {
-  position: relative;
-  /*left: 100px;*/
+
+.contentTitle {
+  /*position relative;*/
+  /*top: 20px;*/
+  /*left: 20px;*/
   text-align: center;
-  color: chartreuse;
-  font-size: 500%;
+  color: black;
+  font-size: : 300%;
+  margin: auto;
+}
+
+.contentText {
+  /*position: relative;*/
+  /*top: 20px;*/
+  /*left: 20px;*/
+  text-align: center;
+  color: black;
+  /*font-size: 100%;*/
 }
