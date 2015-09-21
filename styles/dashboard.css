@@ -59,3 +59,13 @@
   background-color: white;
   display: inline-block;
 }
+
+.tool-item {
+  padding: 20px;
+  border-bottom: 1px solid black;
+  cursor: pointer;
+}
+
+.tool-item:hover{
+  background-color: lightgray;
+}
