@@ -1,0 +1,23 @@
+.personalPhoto{
+  width: 15%;
+  background-color: royalblue;
+  border: solid 2px #CCC;
+  float: left;
+  height: 150px;
+}
+.inline{
+float: left;
+padding: 0 5% 0 5%;
+display: inline;
+}
+.box {
+  margin-left: 15%;
+  width: 40%;
+  background-color: white;
+  border: solid 3px #CCC;
+  float: left;
+  padding: 5px;
+}
+.dataFollower{
+text-align: center;
+}
