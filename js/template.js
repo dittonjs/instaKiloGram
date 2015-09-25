@@ -16,5 +16,9 @@ function toggleNav(){
 }
 
 function transition(e){
+  if(e.currentTarget.innerText.toLowerCase().replace(" ", "_") == "logout"){
+    window.location.href = "home.html";
+    return;
+  }
   window.location.href = e.currentTarget.innerText.toLowerCase().replace(" ", "_") + ".html"; // this is a super hack, but we will do this better when we start doing node stuff
 }
