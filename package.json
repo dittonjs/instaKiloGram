@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/dittonjs/instaKiloGram",
   "dependencies": {
-    "jquery": "^2.1.4"
+    "express": "^4.13.3",
+    "jquery": "^2.1.4",
+    "lodash": "^3.10.1",
+    "q": "^1.4.1"
   }
 }
