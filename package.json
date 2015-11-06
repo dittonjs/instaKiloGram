@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "^4.13.3",
     "express-handlebars": "^2.0.1",
+    "express-session": "^1.12.1",
     "jquery": "^2.1.4",
     "lodash": "^3.10.1",
     "q": "^1.4.1",

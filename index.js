@@ -1,16 +1,20 @@
 var express = require('express'), app = express(), port = 3000;
 var expbars = require('express-handlebars');
 var Request = require('request');
-
+var session  = require('express-session');
+var cfg = require('./config')
 var QueryString = require('querystring');
 
-var ACCESS_TOKEN = "";
-var CLIENT_ID = "720599ea1bce43a1807b2c56b16a10ba";
-var CLIENT_SECRET = "d028e757b070441f8dd412acfd6b2a36";
-var REDIRECT_URI = "http://127.0.0.1:3000/auth/finalize";
 
 app.engine('handlebars', expbars({defaultLayout: "base"}));
 app.set("view engine", "handlebars");
+
+app.use(session({
+  cookieName : 'session',
+  secret: 'asdf;alskjdfa;lskfj',
+  resave: false,
+  saveUninitialized: true
+}))
 
 app.get('/', function(req, res){
   res.render('home', {
@@ -21,8 +25,8 @@ app.get('/', function(req, res){
 
 app.get('/authorize', function(req, res){
   var qs = {
-    client_id: CLIENT_ID,
-    redirect_uri: REDIRECT_URI,
+    client_id: cfg.client_id,
+    redirect_uri: cfg.redirect_uri,
     response_type: "code"
   };
   var query = QueryString.stringify(qs);
@@ -32,9 +36,9 @@ app.get('/authorize', function(req, res){
 
 app.get("/auth/finalize", function(req, res){
   var post = {
-    client_id: CLIENT_ID,
-    client_secret: CLIENT_SECRET,
-    redirect_uri: REDIRECT_URI,
+    client_id: cfg.client_id,
+    client_secret: cfg.client_secret,
+    redirect_uri: cfg.redirect_uri,
     grant_type: "authorization_code",
     code: req.query.code
   }
@@ -47,11 +51,17 @@ app.get("/auth/finalize", function(req, res){
   Request.post(options, function(error, response, body){
     console.log(body);
     var data = JSON.parse(body);
-    ACCESS_TOKEN = data.access_token;
+    req.session.access_token = data.access_token;
     res.redirect("/feed");
   });
 
 });
+
+app.get('/feed',function(req,res){
+  var options={
+    url: 'https://api.instagram.com/v1/users/self/feed?access_token=' + req.session.access_token
+  }
+})
 
 app.get('/profile', function(req, res){
   res.render('profile', {
