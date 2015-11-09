@@ -52,7 +52,7 @@ app.get("/auth/finalize", function(req, res){
     console.log(body);
     var data = JSON.parse(body);
     req.session.access_token = data.access_token;
-    res.redirect("/feed");
+    res.redirect("/dashboard");
   });
 
 });
