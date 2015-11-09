@@ -116,6 +116,5 @@ app.get('/search', function(req, res){
 app.use(express.static(__dirname + '/public'));
 
 app.listen(port);
-//test
 
 console.log("listen on port 3000");
