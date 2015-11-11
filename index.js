@@ -70,7 +70,7 @@ app.get("/auth/finalize", function(req, res, next){
     }
 
     req.session.access_token = data.access_token;
-    res.redirect("/feed");
+    res.redirect("/dashboard");
   });
 });
 
@@ -141,6 +141,5 @@ res.render('error',{
 })
 
 app.listen(port);
-
 
 console.log("listen on port 3000");
