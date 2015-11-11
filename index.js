@@ -23,7 +23,16 @@ app.get('/', function(req, res){
   });
 });
 
+app.get('/index', function(req, res){
+  res.render('index', {
+    title: "This is weird",
+    name: "Joseph",
+  });
+});
+
 app.get('/authorize', function(req, res){
+
+
   var qs = {
     client_id: cfg.client_id,
     redirect_uri: cfg.redirect_uri,
@@ -34,7 +43,12 @@ app.get('/authorize', function(req, res){
   res.redirect(url);
 });
 
-app.get("/auth/finalize", function(req, res){
+app.get("/auth/finalize", function(req, res, next){
+
+  if(req.query.error =='access_denied'){
+  return res.redirect('/')
+
+}
   var post = {
     client_id: cfg.client_id,
     client_secret: cfg.client_secret,
@@ -49,12 +63,15 @@ app.get("/auth/finalize", function(req, res){
   }
 
   Request.post(options, function(error, response, body){
-    console.log(body);
-    var data = JSON.parse(body);
+    //console.log(body);
+    try{var data = JSON.parse(body);}
+    catch(err){
+      return next(err)
+    }
+
     req.session.access_token = data.access_token;
     res.redirect("/dashboard");
   });
-
 });
 
 app.get('/feed',function(req,res){
@@ -114,6 +131,14 @@ app.get('/search', function(req, res){
 // });
 
 app.use(express.static(__dirname + '/public'));
+
+app.use(function(err,req,res,next){
+res.status(err.status || 500);
+res.render('error',{
+  message: err.message,
+  error: {}
+  });
+})
 
 app.listen(port);
 
