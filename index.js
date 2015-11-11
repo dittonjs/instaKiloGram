@@ -74,12 +74,6 @@ app.get("/auth/finalize", function(req, res, next){
   });
 });
 
-app.get('/feed',function(req,res){
-  var options={
-    url: 'https://api.instagram.com/v1/users/self/feed?access_token=' + req.session.access_token
-  }
-})
-
 app.get('/profile', function(req, res){
   res.render('profile', {
     title: "This is weird",
@@ -88,6 +82,9 @@ app.get('/profile', function(req, res){
 });
 
 app.get('/dashboard', function(req, res){
+  var options={
+    url: 'https://api.instagram.com/v1/users/self/feed?access_token=' + req.session.access_token
+  }
   res.render('dashboard', {
     title: "This is weird",
     name: "Joseph",
