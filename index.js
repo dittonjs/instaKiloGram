@@ -1,6 +1,6 @@
 var express = require('express'), app = express(), port = 3000;
 var expbars = require('express-handlebars');
-var Request = require('request');
+var request = require('request');
 var session  = require('express-session');
 var cfg = require('./config')
 var QueryString = require('querystring');
@@ -62,7 +62,7 @@ app.get("/auth/finalize", function(req, res, next){
     form: post
   }
 
-  Request.post(options, function(error, response, body){
+  request.post(options, function(error, response, body){
     //console.log(body);
     try{var data = JSON.parse(body);}
     catch(err){
@@ -83,36 +83,48 @@ app.get('/profile', function(req, res){
 
 app.get('/dashboard', function(req, res){
   var options={
-    url: 'https://api.instagram.com/v1/users/self/feed?access_token=' + req.session.access_token
+    url: 'https://api.instagram.com/v1/users/self/feed?access_token=' + req.session.access_token + '&count=1'
   }
-  res.render('dashboard', {
-    title: "This is weird",
-    name: "Joseph",
-    posts: [{
-      img: "img",
-      likes: 10,
-      comments: 10,
-    },{
-      img: "img",
-      likes: 10,
-      comments: 10,
-    },{
-      img: "img",
-      likes: 10,
-      comments: 10,
-    },{
-      img: "img",
-      likes: 10,
-      comments: 10,
-    },{
-      img: "img",
-      likes: 10,
-      comments: 10,
-    },{
-      img: "img",
-      likes: 10,
-      comments: 10,
-    }]
+  request.get(options, function(error, response, body) {
+    try {
+      var dashboard = JSON.parse(body)
+      if (dashboard.meta.code > 200) {
+        return next(dashboard.meta.error_message);
+      }
+    }
+    catch(err) {
+      return next(err)
+    }
+    res.render('dashboard', {
+      title: "This is weird",
+      name: "Joseph",
+      dashboard: dashboard.data
+      // posts: [{
+      //   img: "img",
+      //   likes: 10,
+      //   comments: 10,
+      // },{
+      //   img: "img",
+      //   likes: 10,
+      //   comments: 10,
+      // },{
+      //   img: "img",
+      //   likes: 10,
+      //   comments: 10,
+      // },{
+      //   img: "img",
+      //   likes: 10,
+      //   comments: 10,
+      // },{
+      //   img: "img",
+      //   likes: 10,
+      //   comments: 10,
+      // },{
+      //   img: "img",
+      //   likes: 10,
+      //   comments: 10,
+      // }]
+    })
   })
 });
 
