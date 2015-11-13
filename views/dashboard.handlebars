@@ -5,7 +5,12 @@
           <div class="recent-post-container">
             <div class="inner-container">
               <div class="inner-header">
-                {{this.created_time}}
+                <script language="javascript">
+	               var jsonDate = {{this.created_time}};
+	                var date = new Date(parseInt(jsonDate) * 1000);
+  	               document.write(date.getDate() + "/" + (date.getMonth()+1) +"/"+date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes());
+                   </script>
+                <!-- {{this.created_time}} -->
                 <!-- Date:11/11/2011 -->
               </div>
               <div class="post-content">
