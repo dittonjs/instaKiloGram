@@ -31,8 +31,6 @@ app.get('/index', function(req, res){
 });
 
 app.get('/authorize', function(req, res){
-
-
   var qs = {
     client_id: cfg.client_id,
     redirect_uri: cfg.redirect_uri,
@@ -81,9 +79,9 @@ app.get('/profile', function(req, res){
   });
 });
 
-app.get('/dashboard', function(req, res){
+app.get('/dashboard', function(req, res, next){
   var options={
-    url: 'https://api.instagram.com/v1/users/self/feed?access_token=' + req.session.access_token + '&count=1'
+    url: 'https://api.instagram.com/v1/users/self/feed?access_token=' + req.session.access_token
   }
   request.get(options, function(error, response, body) {
     try {
