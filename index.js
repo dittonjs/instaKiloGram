@@ -112,7 +112,7 @@ app.get('/dashboard', function(req, res, next){
 });
 
 app.get('/search', function(req, res){
-    res.render('home', {
+    res.render('search', {
     title: "This is weird",
     name: "Joseph",
   });
