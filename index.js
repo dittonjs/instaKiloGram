@@ -13,7 +13,7 @@ app.use(session({
   cookieName : 'session',
   secret: 'asdf;alskjdfa;lskfj',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
   cookie: {
     maxAge: 60000
   }
@@ -96,10 +96,6 @@ app.get('/dashboard', function(req, res, next){
     catch(err) {
       return next(err);
     }
-
-    // We can instead pass the parameter "&count=8" to let instagram how many we want -Alejandro
-    // if(dashboard.data.length > 8) // only get the 8 most recent posts
-    //   dashboard.data.splice(8);
 
     res.render('dashboard', {
       title: "This is weird",
