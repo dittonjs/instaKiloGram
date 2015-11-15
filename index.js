@@ -75,10 +75,26 @@ app.get("/auth/finalize", function(req, res, next){
   });
 });
 
-app.get('/profile', function(req, res){
-  res.render('profile', {
-    title: "This is weird",
-    name: "Joseph",
+app.get('/profile', function(req, res, next){
+  var options = { 
+    url: "  https://api.instagram.com/v1/users/self/?access_token=" + req.session.access_token
+  };
+  request.get(options, function(error, response, body) {
+    try {
+      var user = JSON.parse(body);
+      if (user.meta.code > 200) {
+        return next(user.meta.error_message);
+      }
+    }
+    catch(err) {
+      return next(err);
+    }
+
+    res.render('profile', {
+      name: user.data.full_name,
+      profilePicture: user.data.profile_picture,
+      followers: user.data.counts.followed_by
+    });
   });
 });
 
@@ -147,7 +163,7 @@ app.use(function(err,req,res,next){
   }
   var error;
   if(!err.message) error = err;
-  else error = error.message;
+  else error = err.message;
   res.render('error',{
     message: error,
     error: {}

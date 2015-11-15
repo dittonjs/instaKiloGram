@@ -1,15 +1,9 @@
 <div class="content">
   <div class="center">
-    <div >Welcome, PUPPIES</div>
-  <div><img src="/Users/colebusby/Downloads/puppies.jpeg" class="personalPhoto1" alt="adorable puppies"></div>
-  <div class="box"></div>
-    <div class="spacing">
-    <div class="inputBox">
-    <form action="demo_form.asp">
-      First name: <input type="text" name="fname"><br>
-      Last name:  <input type="text" name="lname"><br>
-      Email Address:      <input type="text" name="email"><br>
-        <input type="submit" value="Update">
-    </form>
+    <div >Welcome, {{name}}
   </div>
+  <div>
+    <img src="{{profilePicture}}" class="personalPhoto1" alt="adorable puppies">
+  </div>
+  <div>Followers: {{followers}}</div>
 </div>
