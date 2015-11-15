@@ -14,11 +14,11 @@ app.use(session({
   secret: 'asdf;alskjdfa;lskfj',
   resave: false,
   saveUninitialized: true
-  // resave: true,
-  // saveUninitialized: true,
-  // cookie: {
-  //   maxAge: 10
-  // }
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 60000
+  }
 }));
 
 app.get('/', function(req, res){
@@ -86,7 +86,7 @@ app.get('/profile', function(req, res){
 
 app.get('/dashboard', function(req, res, next){
   var options={
-    url: 'https://api.instagram.com/v1/users/self/feed?access_token=' + req.session.access_token
+    url: 'https://api.instagram.com/v1/users/self/feed?access_token=' + req.session.access_token + "&count=8"
   }
   request.get(options, function(error, response, body) {
     try {
