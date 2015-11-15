@@ -44,6 +44,14 @@
   border-right: 1px solid gray;
   overflow-y: auto;
 }
+.search-image {
+  width: 200px;
+  height: 200px;
+}
+
+.search-likes{
+  margin-top: 10px;
+}
 
 .search-results {
   background-color: white;

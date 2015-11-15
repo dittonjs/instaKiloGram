@@ -1,7 +1,7 @@
-$(document).ready(function(){
-  $(".save-search-button").unbind("click").bind("click", saveSearch);
-  $(".search-field").unbind("keypress").bind("keypress", search);
-});
+// $(document).ready(function(){
+//   $(".save-search-button").unbind("click").bind("click", saveSearch);
+//   $(".search-field").unbind("keypress").bind("keypress", search);
+// });
 
 function saveSearch(e){
   e.preventDefault();
@@ -13,10 +13,10 @@ function saveSearch(e){
 }
 
 function search(e){
-  if(e.keyCode == 13){  
-    var text = $(".search-field").val();$(".results-panel").append("<div class='results-label search-result'>This is what would show up if you searched for "+text+"</div>");
-    
-  } 
+  var text = $(".search-field").val();
+  if(text && text.length){
+    window.location.href = "search?content=" + text;
+  }
 }
 
 function openSavedSearch(e){

@@ -15,7 +15,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    maxAge: 60000
+    maxAge: 600000
   }
 }));
 
@@ -105,11 +105,35 @@ app.get('/dashboard', function(req, res, next){
   });
 });
 
-app.get('/search', function(req, res){
-    res.render('search', {
-    title: "This is weird",
-    name: "Joseph",
-  });
+app.get('/search', function(req, res, next){
+    if(req.query.content){
+      var options = { 
+        url: "https://api.instagram.com/v1/tags/"+req.query.content+"/media/recent?count=10&access_token=" + req.session.access_token
+      };
+      
+      request.get(options, function(error, response, body){
+        try {
+          var content = JSON.parse(body);
+          if (content.meta.code > 200) {
+            return next(content.meta.error_message);
+          }
+        }
+        catch(err) {
+          return next(err);
+        }
+        console.log(content);
+
+        res.render('search', {
+          content: content.data
+        });
+
+      });
+    } else {
+      res.render('search', {
+        content: []
+      });
+    }
+
 });
 
 
@@ -117,12 +141,15 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(function(err,req,res,next){
   res.status(err.status || 500);
-  if(err == "The access token provided is invalid."){
+  if(err == "The access token provided is invalid." || err == "The access_token provided is invalid."){
     res.redirect('/');
   return;
   }
+  var error;
+  if(!err.message) error = err;
+  else error = error.message;
   res.render('error',{
-    message: err.message,
+    message: error,
     error: {}
     });
 });
