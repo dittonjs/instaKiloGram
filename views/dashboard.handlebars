@@ -8,7 +8,7 @@
             <script language="javascript">
              var jsonDate = {{this.created_time}};
               var date = new Date(parseInt(jsonDate) * 1000);
-               document.write(date.getDate() + "/" + (date.getMonth()+1) +"/"+date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes());
+               document.write((date.getMonth()+1) + "/" + date.getDate() +"/"+date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes());
                </script>
           </div>
           <div class="post-content">
