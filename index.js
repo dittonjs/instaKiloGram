@@ -12,9 +12,12 @@ app.set("view engine", "handlebars");
 app.use(session({
   cookieName : 'session',
   secret: 'asdf;alskjdfa;lskfj',
-  resave: false,
-  saveUninitialized: true
-}))
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 10
+  }
+}));
 
 app.get('/', function(req, res){
   res.render('home', {
@@ -44,7 +47,7 @@ app.get('/authorize', function(req, res){
 app.get("/auth/finalize", function(req, res, next){
 
   if(req.query.error =='access_denied'){
-  return res.redirect('/')
+  return res.redirect('/');
 
 }
   var post = {
@@ -85,67 +88,47 @@ app.get('/dashboard', function(req, res, next){
   }
   request.get(options, function(error, response, body) {
     try {
-      var dashboard = JSON.parse(body)
+      var dashboard = JSON.parse(body);
       if (dashboard.meta.code > 200) {
         return next(dashboard.meta.error_message);
       }
     }
     catch(err) {
-      return next(err)
+      return next(err);
     }
+
+    if(dashboard.data.length > 8) // only get the 8 most recent posts
+      dashboard.data.splice(8);
+
     res.render('dashboard', {
       title: "This is weird",
       name: "Joseph",
       dashboard: dashboard.data
-      // posts: [{
-      //   img: "img",
-      //   likes: 10,
-      //   comments: 10,
-      // },{
-      //   img: "img",
-      //   likes: 10,
-      //   comments: 10,
-      // },{
-      //   img: "img",
-      //   likes: 10,
-      //   comments: 10,
-      // },{
-      //   img: "img",
-      //   likes: 10,
-      //   comments: 10,
-      // },{
-      //   img: "img",
-      //   likes: 10,
-      //   comments: 10,
-      // },{
-      //   img: "img",
-      //   likes: 10,
-      //   comments: 10,
-      // }]
-    })
-  })
+    });
+  });
 });
 
 app.get('/search', function(req, res){
     res.render('home', {
     title: "This is weird",
     name: "Joseph",
-  })
+  });
 });
 
-// app.get('/profile', function(req, res){
-//   res.sendFile(__dirname + "/public/html/profile.html");
-// });
 
 app.use(express.static(__dirname + '/public'));
 
 app.use(function(err,req,res,next){
-res.status(err.status || 500);
-res.render('error',{
-  message: err.message,
-  error: {}
-  });
-})
+  res.status(err.status || 500);
+  if(err == "The access_token provided is invalid."){
+    res.redirect('/');
+  return;
+  }
+  res.render('error',{
+    message: err.message,
+    error: {}
+    });
+});
 
 app.listen(port);
 
