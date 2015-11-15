@@ -12,11 +12,13 @@ app.set("view engine", "handlebars");
 app.use(session({
   cookieName : 'session',
   secret: 'asdf;alskjdfa;lskfj',
-  resave: true,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 10
-  }
+  resave: false,
+  saveUninitialized: true
+  // resave: true,
+  // saveUninitialized: true,
+  // cookie: {
+  //   maxAge: 10
+  // }
 }));
 
 app.get('/', function(req, res){
@@ -97,8 +99,9 @@ app.get('/dashboard', function(req, res, next){
       return next(err);
     }
 
-    if(dashboard.data.length > 8) // only get the 8 most recent posts
-      dashboard.data.splice(8);
+    // We can instead pass the parameter "&count=8" to let instagram how many we want -Alejandro
+    // if(dashboard.data.length > 8) // only get the 8 most recent posts
+    //   dashboard.data.splice(8);
 
     res.render('dashboard', {
       title: "This is weird",
@@ -120,7 +123,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(function(err,req,res,next){
   res.status(err.status || 500);
-  if(err == "The access_token provided is invalid."){
+  if(err == "The access token provided is invalid."){
     res.redirect('/');
   return;
   }
