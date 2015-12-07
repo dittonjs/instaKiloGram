@@ -68,33 +68,7 @@ app.get('/profile', function(req, res) {
   }
 })
 
-// app.get('/profile', function(req, res, next){
-//   var options = {
-//     url: "https://api.instagram.com/v1/users/self/?access_token=" + req.session.access_token
-//   };
-//   var user = User.find()
-//   request.get(options, function(error, response, body) {
-//     try {
-//       var user = JSON.parse(body);
-//       user._id = user.id;
-//       Users.insert(user, function(result) {
-//         req.session.userId = result.ops[0]._id;
-//       });
-//       if (user.meta.code > 200) {
-//         return next(user.meta.error_message);
-//       }
-//     }
-//     catch(err) {
-//       return next(err);
-//     }
 
-//     res.render('profile', {
-//       name: user.data.full_name,
-//       profilePicture: user.data.profile_picture,
-//       followers: user.data.counts.followed_by
-//     });
-//   });
-// });
 
 app.post('/profile', function(req, res) {
   var user = req.body
@@ -214,7 +188,7 @@ app.get("/auth/finalize", function(req, res, next){
   request.post(options, function(error, response, body){
     //console.log(body);
     var data = {};
-    try{  
+    try{
       data = JSON.parse(body);
     }
     catch(err){
@@ -223,8 +197,12 @@ app.get("/auth/finalize", function(req, res, next){
     console.log("DATA", data);
     var user = data.user
     var names = user.full_name.split(" ");
+    var website = user.website;
+    var bio = user.bio;
     user.fname = names[0];
     user.lname = names[1];
+    user.website = website;
+    user.bio = bio
     user._id = user.id;
     var temp;
     Users.find(data.user.id, function(doc){
@@ -280,3 +258,32 @@ db.connect('mongodb://bendata:asdfasdf123@ds055574.mongolab.com:55574/bendata', 
 app.listen(port);
 
 //console.log("listen on port 3000");
+
+
+// app.get('/profile', function(req, res, next){
+//   var options = {
+//     url: "https://api.instagram.com/v1/users/self/?access_token=" + req.session.access_token
+//   };
+//   var user = User.find()
+//   request.get(options, function(error, response, body) {
+//     try {
+//       var user = JSON.parse(body);
+//       user._id = user.id;
+//       Users.insert(user, function(result) {
+//         req.session.userId = result.ops[0]._id;
+//       });
+//       if (user.meta.code > 200) {
+//         return next(user.meta.error_message);
+//       }
+//     }
+//     catch(err) {
+//       return next(err);
+//     }
+
+//     res.render('profile', {
+//       name: user.data.full_name,
+//       profilePicture: user.data.profile_picture,
+//       followers: user.data.counts.followed_by
+//     });
+//   });
+// });
