@@ -98,8 +98,11 @@ app.get('/profile', function(req, res) {
 
 app.post('/profile', function(req, res) {
   var user = req.body
+  console.log(user)
+  id=req.session.userId
+  console.log(req.session.userId)
     //Update the user
-  Users.update(user, function() {
+  Users.update(id, function() {
     //Render the update view again
     res.render('profile', {
       user: user,
@@ -145,7 +148,7 @@ app.get('/search', function(req, res) {
     Users.find(req.session.userId, function(document) {
       if (!document) return res.redirect('/')
       //Render the update view
-      res.render('tags', {
+      res.render('search', {
         user: document
       });
     });
@@ -214,7 +217,7 @@ app.get("/auth/finalize", function(req, res, next){
   request.post(options, function(error, response, body){
     //console.log(body);
     var data = {};
-    try{  
+    try{
       data = JSON.parse(body);
     }
     catch(err){
