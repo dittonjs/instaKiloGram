@@ -1,9 +1,12 @@
-var express = require('express'), app = express(), port = 3000;
+var express = require('express'), app = express(), port = 3456;
 var expbars = require('express-handlebars');
 var request = require('request');
 var session  = require('express-session');
 var cfg = require('./config')
 var QueryString = require('querystring');
+
+var db = require('./db')
+var Users = require('./models/users')
 
 
 app.engine('handlebars', expbars({defaultLayout: "base"}));
@@ -19,12 +22,152 @@ app.use(session({
   }
 }));
 
+app.use(express.static(__dirname + '/public'));
+
+app.use(function(err,req,res,next){
+  res.status(err.status || 500);
+  if(err == "The access token provided is invalid." || err == "The access_token provided is invalid."){
+    res.redirect('/');
+  return;
+  }
+  var error;
+  if(!err.message) error = err;
+  else error = err.message;
+  res.render('error',{
+    message: error,
+    error: {}
+    });
+});
+
 app.get('/', function(req, res){
-  res.render('home', {
-    title: "This is weird",
-    name: "Joseph",
+  res.render('home');
+});
+
+app.post('/', function(req, res) {
+  var user = req.body
+  console.log(user)
+  Users.insert(user, function(result) {
+    req.session.userId = result.ops[0]._id
+    res.redirect('/profile')
+  })
+})
+
+
+// app.get('/profile', function(req, res) {
+//   if (req.session.userId) {
+//     //Find user
+//     Users.find(req.session.userId, function(document) {
+//       if (!document) return res.redirect('/')
+//       //Render the update view
+//       res.render('profile', {
+//         user: document
+//       })
+//     })
+//   } else {
+//     res.redirect('/')
+//   }
+// })
+
+app.get('/profile', function(req, res, next){
+  var options = {
+    url: "  https://api.instagram.com/v1/users/self/?access_token=" + req.session.access_token
+  };
+  request.get(options, function(error, response, body) {
+    try {
+      var user = JSON.parse(body);
+      if (user.meta.code > 200) {
+        return next(user.meta.error_message);
+      }
+    }
+    catch(err) {
+      return next(err);
+    }
+
+    res.render('profile', {
+      name: user.data.full_name,
+      profilePicture: user.data.profile_picture,
+      followers: user.data.counts.followed_by
+    });
   });
 });
+
+app.post('/profile', function(req, res) {
+  var user = req.body
+    //Update the user
+  Users.update(user, function() {
+    //Render the update view again
+    res.render('profile', {
+      user: user,
+      success: 'Successfully updated the user!'
+    })
+  })
+})
+
+app.get('/search', function(req, res, next){
+    if(req.query.content){
+      var options = {
+        url: "https://api.instagram.com/v1/tags/"+req.query.content+"/media/recent?count=10&access_token=" + req.session.access_token
+      };
+
+      request.get(options, function(error, response, body){
+        try {
+          var content = JSON.parse(body);
+          if (content.meta.code > 200) {
+            return next(content.meta.error_message);
+          }
+        }
+        catch(err) {
+          return next(err);
+        }
+        console.log(content);
+
+        res.render('search', {
+          content: content.data
+        });
+
+      });
+    } else {
+      res.render('search', {
+        content: []
+      });
+    }
+
+});
+
+app.get('/search', function(req, res) {
+  if (req.session.userId) {
+    //Find user
+    Users.find(req.session.userId, function(document) {
+      if (!document) return res.redirect('/')
+      //Render the update view
+      res.render('tags', {
+        user: document
+      })
+    })
+  } else {
+    res.redirect('/')
+  }
+})
+
+app.post('/search/saveSearch', function(req, res) {
+  var tag = req.body.tag
+  var userId = req.session.userId
+  //Add the tag to the user
+  Users.addTag(userId, tag, function() {
+    res.redirect('/search')
+  })
+})
+
+app.post('/search/removeSearch', function(req, res) {
+  var tag = req.body.tag
+  var userId = req.session.userId
+  //Add the tag to the user
+  Users.removeTag(userId, tag, function() {
+    res.redirect('/search')
+  })
+})
+
+
 
 app.get('/index', function(req, res){
   res.render('index', {
@@ -75,28 +218,7 @@ app.get("/auth/finalize", function(req, res, next){
   });
 });
 
-app.get('/profile', function(req, res, next){
-  var options = { 
-    url: "  https://api.instagram.com/v1/users/self/?access_token=" + req.session.access_token
-  };
-  request.get(options, function(error, response, body) {
-    try {
-      var user = JSON.parse(body);
-      if (user.meta.code > 200) {
-        return next(user.meta.error_message);
-      }
-    }
-    catch(err) {
-      return next(err);
-    }
 
-    res.render('profile', {
-      name: user.data.full_name,
-      profilePicture: user.data.profile_picture,
-      followers: user.data.counts.followed_by
-    });
-  });
-});
 
 app.get('/dashboard', function(req, res, next){
   var options={
@@ -121,55 +243,19 @@ app.get('/dashboard', function(req, res, next){
   });
 });
 
-app.get('/search', function(req, res, next){
-    if(req.query.content){
-      var options = { 
-        url: "https://api.instagram.com/v1/tags/"+req.query.content+"/media/recent?count=10&access_token=" + req.session.access_token
-      };
-      
-      request.get(options, function(error, response, body){
-        try {
-          var content = JSON.parse(body);
-          if (content.meta.code > 200) {
-            return next(content.meta.error_message);
-          }
-        }
-        catch(err) {
-          return next(err);
-        }
-        console.log(content);
-
-        res.render('search', {
-          content: content.data
-        });
-
-      });
-    } else {
-      res.render('search', {
-        content: []
-      });
-    }
-
-});
-
-
-app.use(express.static(__dirname + '/public'));
-
-app.use(function(err,req,res,next){
-  res.status(err.status || 500);
-  if(err == "The access token provided is invalid." || err == "The access_token provided is invalid."){
-    res.redirect('/');
-  return;
+db.connect('mongodb://bendata:asdfasdf123@ds055574.mongolab.com:55574/bendata', function(err) {
+  console.log("what is going on????")
+  // console.log(err)
+  if (err) {
+    //console.log('Unable to connect to Mongo.')
+    process.exit(1)
+  } else {
+    app.listen(3000, function() {
+      console.log('Listening on port 3000...')
+    })
   }
-  var error;
-  if(!err.message) error = err;
-  else error = err.message;
-  res.render('error',{
-    message: error,
-    error: {}
-    });
-});
+})
 
 app.listen(port);
 
-console.log("listen on port 3000");
+//console.log("listen on port 3000");
