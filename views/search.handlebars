@@ -4,21 +4,10 @@
     <input class="search-field" type="text" placeholder="Search..."></input>
     <button class="button save-search-button" onclick="search()">Search</button>
 
-    <form class="user-form" action="/search/saveSearch" method="post">
-      <input type="hidden" name="_id" value="{{user._id}}">
-      <p>
-        <input type="text" name="search" value="" placeholder="Search...">
-      </p>
-      <p>
-        <button type="submit">Submit</button>
-      </p>
-    </form>
-
   </div>
   <div class="search-results">
     <div class="results-panel">
       <div class="results-label search-result">
-
         {{#if user.searchs}}
           <h2>Current Searches</h2>
           {{#each user.search}}
@@ -29,7 +18,6 @@
             </form>
           {{/each}}
         {{/if}}
-
       </div>
       {{#each content}}
         <div class="results-label search-result">
@@ -42,7 +30,7 @@
               </script>
             </div>
             <div>
-                <img src="{{this.images.thumbnail.url}}" class="search-image"/>
+              <img src="{{this.images.thumbnail.url}}" class="search-image"/>
             </div>
           </div>
           <div class="search-likes">
@@ -51,18 +39,21 @@
           </div>
         </div>
       {{/each}}
+    </div>
+  </div>
+  <div class="saved-searches">
+    <h1>Manage Search</h1>
+      <form class="user-form" action="/searchs/add" method="post">
+        <input type="hidden" name="_id" value="{{user._id}}">
+        <p>
+          <input type="text" name="search" value="" placeholder="search Name">
+        </p>
+        <p>
+          <button type="submit">Submit</button>
+        </p>
+      </form>
   </div>
 </div>
 
-<h1>Manage Search</h1>
-<form class="user-form" action="/searchs/add" method="post">
-  <input type="hidden" name="_id" value="{{user._id}}">
-  <p>
-    <input type="text" name="search" value="" placeholder="search Name">
-  </p>
-  <p>
-    <button type="submit">Submit</button>
-  </p>
-</form>
 
 
