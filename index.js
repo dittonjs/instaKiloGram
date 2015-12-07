@@ -49,47 +49,52 @@ app.post('/', function(req, res) {
   Users.insert(user, function(result) {
     req.session.userId = result.ops[0]._id
     res.redirect('/profile')
-  })
+  });
 })
 
 
-// app.get('/profile', function(req, res) {
-//   if (req.session.userId) {
-//     //Find user
-//     Users.find(req.session.userId, function(document) {
-//       if (!document) return res.redirect('/')
-//       //Render the update view
-//       res.render('profile', {
-//         user: document
-//       })
-//     })
-//   } else {
-//     res.redirect('/')
-//   }
-// })
+app.get('/profile', function(req, res) {
+  if (req.session.userId) {
+    //Find user
+    Users.find(req.session.userId, function(document) {
+      if (!document) return res.redirect('/')
+      //Render the update view
+      res.render('profile', {
+        user: document
+      })
+    })
+  } else {
+    res.redirect('/')
+  }
+})
 
-app.get('/profile', function(req, res, next){
-  var options = {
-    url: "  https://api.instagram.com/v1/users/self/?access_token=" + req.session.access_token
-  };
-  request.get(options, function(error, response, body) {
-    try {
-      var user = JSON.parse(body);
-      if (user.meta.code > 200) {
-        return next(user.meta.error_message);
-      }
-    }
-    catch(err) {
-      return next(err);
-    }
+// app.get('/profile', function(req, res, next){
+//   var options = {
+//     url: "https://api.instagram.com/v1/users/self/?access_token=" + req.session.access_token
+//   };
+//   var user = User.find()
+//   request.get(options, function(error, response, body) {
+//     try {
+//       var user = JSON.parse(body);
+//       user._id = user.id;
+//       Users.insert(user, function(result) {
+//         req.session.userId = result.ops[0]._id;
+//       });
+//       if (user.meta.code > 200) {
+//         return next(user.meta.error_message);
+//       }
+//     }
+//     catch(err) {
+//       return next(err);
+//     }
 
-    res.render('profile', {
-      name: user.data.full_name,
-      profilePicture: user.data.profile_picture,
-      followers: user.data.counts.followed_by
-    });
-  });
-});
+//     res.render('profile', {
+//       name: user.data.full_name,
+//       profilePicture: user.data.profile_picture,
+//       followers: user.data.counts.followed_by
+//     });
+//   });
+// });
 
 app.post('/profile', function(req, res) {
   var user = req.body
@@ -99,9 +104,9 @@ app.post('/profile', function(req, res) {
     res.render('profile', {
       user: user,
       success: 'Successfully updated the user!'
-    })
-  })
-})
+    });
+  });
+});
 
 app.get('/search', function(req, res, next){
     if(req.query.content){
@@ -142,8 +147,8 @@ app.get('/search', function(req, res) {
       //Render the update view
       res.render('tags', {
         user: document
-      })
-    })
+      });
+    });
   } else {
     res.redirect('/')
   }
@@ -208,11 +213,28 @@ app.get("/auth/finalize", function(req, res, next){
 
   request.post(options, function(error, response, body){
     //console.log(body);
-    try{var data = JSON.parse(body);}
+    var data = {};
+    try{  
+      data = JSON.parse(body);
+    }
     catch(err){
       return next(err)
     }
-
+    console.log("DATA", data);
+    var user = data.user
+    var names = user.full_name.split(" ");
+    user.fname = names[0];
+    user.lname = names[1];
+    user._id = user.id;
+    var temp;
+    Users.find(data.user.id, function(doc){
+      if(!doc){
+        Users.insert(user, function(result) {
+          //no-op
+        });
+      }
+    });
+    req.session.userId = data.user.id;
     req.session.access_token = data.access_token;
     res.redirect("/dashboard");
   });
@@ -244,7 +266,6 @@ app.get('/dashboard', function(req, res, next){
 });
 
 db.connect('mongodb://bendata:asdfasdf123@ds055574.mongolab.com:55574/bendata', function(err) {
-  console.log("what is going on????")
   // console.log(err)
   if (err) {
     //console.log('Unable to connect to Mongo.')

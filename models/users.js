@@ -1,4 +1,4 @@
-var ObjectId = require('mongodb').ObjectId
+
 var assert = require('assert')
 var db = require('../db')
 
@@ -19,7 +19,7 @@ exports.find = function(id, callback) {
   // Get the users collection
   var collection = db.get().collection('users')
   // Find a user
-  collection.findOne({'_id': ObjectId(id)}, function(err, document) {
+  collection.findOne({'_id': id}, function(err, document) {
     assert.equal(err, null)
     console.log('Found 1 user document')
     callback(document)
@@ -29,7 +29,7 @@ exports.find = function(id, callback) {
 exports.update = function(user, callback) {
   // Get the users collection
   var collection = db.get().collection('users')
-  user._id = ObjectId(user._id)
+  user._id = user._id
   // Update the user
   collection.update({'_id': user._id},
     { $set: user },
@@ -47,7 +47,7 @@ exports.saveSearch = function(userId, search, callback) {
   var collection = db.get().collection('users')
   // Add the serach
   collection.update(
-    {'_id': ObjectId(userId)},
+    {'_id': userId},
     { $push: { search: search }},
     function(err, result) {
       assert.equal(err, null)
@@ -63,7 +63,7 @@ exports.removeSearch = function(userId, search, callback) {
   var collection = db.get().collection('users')
   // Add the tag
   collection.update(
-    {'_id': ObjectId(userId)},
+    {'_id': userId},
     { $pull: { search: search }},
     function(err, result) {
       assert.equal(err, null)
