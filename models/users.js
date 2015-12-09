@@ -31,8 +31,7 @@ exports.update = function(user, callback) {
   var collection = db.get().collection('users')
   user._id = user._id
   // Update the user
-  collection.update({'_id': user._id},
-    { $set: user },
+  collection.update({'_id': user._id}, user,
     function(err, result) {
       assert.equal(err, null)
       assert.equal(1, result.result.n)

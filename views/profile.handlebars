@@ -3,7 +3,7 @@
     <div >Welcome, {{user.username}}
   </div>
   <div>
-    <img src="{{user.profile_picture}}" class="personalPhoto1" alt="adorable puppies">
+    <img src="{{user.profile_picture}}" class="personalPhoto1" alt="mystery man">
   </div>
   <div>Followers: {{followers}}</div>
 
@@ -15,6 +15,7 @@
     {{/if}}
     <form class="user-form" action="" method="post">
       <input type="hidden" name="_id" value="{{user._id}}">
+       <input type="hidden" name="profile_picture" value="{{user.profile_picture}}">
       <p>
         <input type="text" name="username" value="{{user.username}}" placeholder="Username">
       </p>

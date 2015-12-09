@@ -2,6 +2,7 @@ var express = require('express'), app = express(), port = 3456;
 var expbars = require('express-handlebars');
 var request = require('request');
 var session  = require('express-session');
+var bodyParser = require('body-parser')
 var cfg = require('./config')
 var QueryString = require('querystring');
 
@@ -11,6 +12,8 @@ var Users = require('./models/users')
 
 app.engine('handlebars', expbars({defaultLayout: "base"}));
 app.set("view engine", "handlebars");
+
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(session({
   cookieName : 'session',
@@ -58,7 +61,6 @@ app.get('/profile', function(req, res) {
     //Find user
     Users.find(req.session.userId, function(document) {
       if (!document) return res.redirect('/')
-      //Render the update view
       res.render('profile', {
         user: document
       })
@@ -68,15 +70,10 @@ app.get('/profile', function(req, res) {
   }
 })
 
-
-
 app.post('/profile', function(req, res) {
+
   var user = req.body
-  console.log(user)
-  id=req.session.userId
-  console.log(req.session.userId)
-    //Update the user
-  Users.update(id, function() {
+  Users.update(user, function() {
     //Render the update view again
     res.render('profile', {
       user: user,
