@@ -98,7 +98,7 @@ app.get('/search', function(req, res, next){
         catch(err) {
           return next(err);
         }
-        console.log(content);
+        // console.log(content);
 
         res.render('search', {
           content: content.data
@@ -126,6 +126,7 @@ app.get('/search', function(req, res) {
   } else {
     res.redirect('/')
   }
+
 })
 
 app.post('/search/saveSearch', function(req, res) {
@@ -199,11 +200,13 @@ app.get("/auth/finalize", function(req, res, next){
     var names = user.full_name.split(" ");
     var website = user.website;
     var bio = user.bio;
+    var search = user.search;
     user.fname = names[0];
     user.lname = names[1];
     user.website = website;
     user.bio = bio
     user._id = user.id;
+    user.search = search;
     var temp;
     Users.find(data.user.id, function(doc){
       if(!doc){
