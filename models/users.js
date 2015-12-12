@@ -52,6 +52,7 @@ exports.saveSearch = function(userId, search, callback) {
       assert.equal(err, null)
       assert.equal(1, result.result.n)
       console.log('Added 1 search to a document in the users collection')
+      console.log(search);
       callback()
     }
   )

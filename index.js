@@ -132,7 +132,7 @@ app.post('/search/saveSearch', function(req, res) {
   var tag = req.body.tag
   var userId = req.session.userId
   //Add the tag to the user
-  Users.addTag(userId, tag, function() {
+  Users.saveSearch(userId, tag, function() {
     res.redirect('/search')
   })
 })

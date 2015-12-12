@@ -8,7 +8,7 @@
   <div class="search-results">
     <div class="results-panel">
       <div class="results-label search-result">
-        {{#if user.searchs}}
+        {{#if user.find}}
           <h2>Current Searches</h2>
           {{#each user.search}}
             <form action="/search/removeSearch" method="post">
@@ -43,10 +43,10 @@
   </div>
   <div class="saved-searches">
     <h1>Manage Search</h1>
-      <form class="user-form" action="/searchs/add" method="post">
+      <form class="user-form" action="/search/saveSearch" method="post">
         <input type="hidden" name="_id" value="{{user._id}}">
         <p>
-          <input type="text" name="search" value="" placeholder="search Name">
+          <input type="text" name="{{user.search}}" value="" placeholder="search Name">
         </p>
         <p>
           <button type="submit">Submit</button>
@@ -54,6 +54,3 @@
       </form>
   </div>
 </div>
-
-
-
