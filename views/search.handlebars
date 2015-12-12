@@ -1,24 +1,16 @@
 <div class="content">
   <div class="search-header">
     <i class="fa fa-search search-icon"></i>
-    <input class="search-field" type="text" placeholder="Search..."></input>
+    <input class="search-field" type="text" value="{{query}}" placeholder="Search..."></input>
     <button class="button save-search-button" onclick="search()">Search</button>
-
+    <form class="user-form" action="/search/saveSearch" method="post">
+      <input type="hidden" name="tag" value="{{query}}">
+        <button class="button save-search-button" type="submit">Save Search</button>
+    </form>
+    
   </div>
   <div class="search-results">
     <div class="results-panel">
-      <div class="results-label search-result">
-        {{#if user.find}}
-          <h2>Current Searches</h2>
-          {{#each user.search}}
-            <form action="/search/removeSearch" method="post">
-              {{this}}
-              <input type="hidden" name="search" value="{{this}}">
-              <button type="submit">Delete</button>
-            </form>
-          {{/each}}
-        {{/if}}
-      </div>
       {{#each content}}
         <div class="results-label search-result">
           <div>
@@ -42,15 +34,18 @@
     </div>
   </div>
   <div class="saved-searches">
-    <h1>Manage Search</h1>
-      <form class="user-form" action="/search/saveSearch" method="post">
-        <input type="hidden" name="_id" value="{{user._id}}">
-        <p>
-          <input type="text" name="{{user.search}}" value="" placeholder="search Name">
-        </p>
-        <p>
-          <button type="submit">Submit</button>
-        </p>
-      </form>
+    <h1>Saved Searches</h1>
+      <div class="results-label search-result">
+        {{#if user}}
+          <h2>Current Searches</h2>
+          {{#each user.search}}
+            <form action="/search/removeSearch" method="post">
+              <span onclick="openSavedSearch(this)">{{this}}</span>
+              <input type="hidden" name="tag" value="{{this}}">
+              <button class="button save-search-button" type="submit">Delete</button>
+            </form>
+          {{/each}}
+        {{/if}}
+      </div>
   </div>
 </div>

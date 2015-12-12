@@ -48,7 +48,6 @@ app.get('/', function(req, res){
 
 app.post('/', function(req, res) {
   var user = req.body
-  console.log(user)
   Users.insert(user, function(result) {
     req.session.userId = result.ops[0]._id
     res.redirect('/profile')
@@ -98,43 +97,41 @@ app.get('/search', function(req, res, next){
         catch(err) {
           return next(err);
         }
-        // console.log(content);
 
-        res.render('search', {
-          content: content.data
+        Users.find(req.session.userId, function(document) {
+          if (!document) return res.redirect('/')
+
+
+          res.render('search', {
+            content: content.data,
+            query: req.query.content,
+            user: document
+          });
         });
-
+        // console.log(content);
       });
     } else {
-      res.render('search', {
-        content: []
+      Users.find(req.session.userId, function(document) {
+        if (!document) return res.redirect('/')
+
+
+        res.render('search', {
+          content: [],
+          query: "",
+          user: document
+        });
       });
     }
 
 });
 
-app.get('/search', function(req, res) {
-  if (req.session.userId) {
-    //Find user
-    Users.find(req.session.userId, function(document) {
-      if (!document) return res.redirect('/')
-      //Render the update view
-      res.render('search', {
-        user: document
-      });
-    });
-  } else {
-    res.redirect('/')
-  }
-
-})
-
 app.post('/search/saveSearch', function(req, res) {
-  var tag = req.body.tag
-  var userId = req.session.userId
+  var tag = req.body.tag;
+  var userId = req.session.userId;
+  console.log("TAG", req.body)
   //Add the tag to the user
   Users.saveSearch(userId, tag, function() {
-    res.redirect('/search')
+    res.redirect('/search?content='+tag)
   })
 })
 
@@ -142,7 +139,7 @@ app.post('/search/removeSearch', function(req, res) {
   var tag = req.body.tag
   var userId = req.session.userId
   //Add the tag to the user
-  Users.removeTag(userId, tag, function() {
+  Users.removeSearch(userId, tag, function() {
     res.redirect('/search')
   })
 })

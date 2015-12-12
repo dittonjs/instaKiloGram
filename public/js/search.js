@@ -4,12 +4,10 @@
 // });
 
 function saveSearch(e){
-  e.preventDefault();
   var text = $(".search-field").val();
   if(text.length == 0) return;
   $(".saved-searches").append("<div class='saved-search-label saved-search'>You saved a search named "+text+"</div>");
   $(".saved-search").unbind("click").bind("click", openSavedSearch)
-  console.log(e);
 }
 
 function search(e){
@@ -19,8 +17,9 @@ function search(e){
   }
 }
 
-function openSavedSearch(e){
-  var text = e.target.textContent.split(" ");
-  text = text[text.length -1];
-  $(".results-panel").append("<div class='results-label search-result'>You clicked a save search called "+text+"</div>");
+function openSavedSearch(node){
+  var text = node.textContent;
+  if(text && text.length){
+    window.location.href = "search?content=" + text;
+  }
 }
